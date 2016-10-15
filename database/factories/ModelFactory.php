@@ -11,13 +11,38 @@
 |
 */
 
-$factory->define(App\User::class, function (Faker\Generator $faker) {
-    static $password;
+use Carbon\Carbon;
 
+$factory->define(App\User::class, function (Faker\Generator $faker) {
+    $email = $faker->unique()->safeEmail;
     return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
+        'email' => $email,
+        'password' => bcrypt($email),
         'remember_token' => str_random(10),
+        'hmo_id' => 1,
+        'entity_id' => 1,
+        'role_id' => 1,
+        'activated' => 0,
+        'date_activated' => Carbon::now(),
+        'last_login' => Carbon::now(),
     ];
+});
+
+$factory->define(App\Hmo::class, function (Faker\Generator $faker){
+    return [
+        'name' => $faker->company,
+        'street' => $faker->streetName,
+        'email' => $faker->unique()->companyEmail,
+        'phone_office' => $faker->unique()->phoneNumber,
+        'phone_mobile' => $faker->unique()->phoneNumber,
+        'city' => $faker->unique()->city,
+        'state' => 'Lagos',
+        'country' => 'Nigeria',
+        'lg' => 'Lagos Mainland',
+        'created_by' => 'bolaji@gmail.com',
+        'activated' => 0
+    ];
+
 });
