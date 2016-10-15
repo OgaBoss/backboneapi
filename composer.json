@@ -10,7 +10,7 @@
         "league/fractal": "^0.14.0",
         "dingo/api": "1.0.x@dev",
         "tymon/jwt-auth": "0.5.*",
-        "league/factory-muffin": "~2.0"
+        "barryvdh/laravel-cors": "^0.8.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

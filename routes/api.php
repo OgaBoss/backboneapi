@@ -12,9 +12,14 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT');
+header("Access-Control-Allow-Headers: Authorization, X-Requested-With,  Content-Type, Accept");
+
 $api = app('Dingo\Api\Routing\Router');
 
-$api->version(['v1', 'middleware' => 'api'], function($api){
+$api->version(['v1', 'middleware' => 'api|cors'], function($api){
     $api->post('authenticate', [
         'as' => 'authenticate.user',
         'uses' => 'App\Http\Controllers\Api\LoginController@authenticate'
