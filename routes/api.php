@@ -29,5 +29,7 @@ $api->version(['v1', 'middleware' => 'api|cors'], function($api){
         'as' => 'currentAuthUser',
         'uses' => 'App\Http\Controllers\Api\LoginController@getAuthenticatedUser'
     ]);
+
+    $api->resource('enrollees','App\Http\Controllers\Api\EnrolleeController');
 });
 

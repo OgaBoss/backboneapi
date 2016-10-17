@@ -44,5 +44,40 @@ $factory->define(App\Hmo::class, function (Faker\Generator $faker){
         'created_by' => 'bolaji@gmail.com',
         'activated' => 0
     ];
+});
 
+$factory->define(App\Enrollee::class, function(Faker\Generator $faker){
+    return [
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
+        'organization_id' => 1,
+        'hmo_id' => 1,
+        'generated_id' => 'KBU/LAG/0000'.$faker->numberBetween(1,40),
+        'image_url' => $faker->imageUrl(200, 200, 'people'),
+        'phone' => $faker->unique()->phoneNumber,
+        'email' => $faker->unique()->safeEmail,
+        'city' =>  $faker->unique()->city,
+        'lg' => 'Lagos Mainland',
+        'state' => 'Lagos',
+        'country' => 'Nigeria',
+        'status' => 0,
+        'dob' => $faker->date($format = 'Y-m-d', $max = 'now'),
+        'enrollee_type' => 'child',
+        'dependent_id' => 8
+    ];
+});
+
+$factory->define(App\Organization::class, function(Faker\Generator $faker){
+   return [
+       'name' => $faker->unique()->companyEmail,
+       'hmo_id' => 1,
+       'generated_id' => 'MTN/LAG/0000'.$faker->numberBetween(1,20),
+       'phone' => $faker->unique()->phoneNumber,
+       'email' => $faker->unique()->safeEmail,
+       'industry' => 'Communication and Technology',
+       'city' =>  $faker->unique()->city,
+       'lg' => 'Lagos Mainland',
+       'state' => 'Lagos',
+       'country' => 'Nigeria',
+   ];
 });
