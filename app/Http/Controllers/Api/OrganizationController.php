@@ -10,21 +10,8 @@ use League\Fractal\Resource\Collection;
 use App\Transformers\EnrolleeTransformer;
 use App\Repositories\EnrolleeRepository as Enrollee;
 
-
-
-class EnrolleeController extends Controller
+class OrganizationController extends Controller
 {
-    protected $fractal;
-    protected $enrollee;
-    protected $enrolleeTransformer;
-
-    public function __construct(Enrollee $enrollee, Manager $manager, EnrolleeTransformer $enrolleeTransformer){
-        $this->middleware('jwt.auth');
-        $this->fractal = $manager;
-        $this->enrollee = $enrollee;
-        $this->enrolleeTransformer = $enrolleeTransformer;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -33,10 +20,6 @@ class EnrolleeController extends Controller
     public function index()
     {
         //
-        $collection = new Collection($this->enrollee->all(), $this->enrolleeTransformer);
-        $data = $this->fractal->createData($collection);
-        return response()->json(['enrollees' => $data->toArray()], 200);
-
     }
 
     /**
