@@ -32,7 +32,11 @@ class Enrollee extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function organizations(){
+    public function organization(){
         return $this->belongsTo('App\Organization');
+    }
+
+    public function plan(){
+        return $this->belongsTo('App\Plan');
     }
 }

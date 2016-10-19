@@ -13,10 +13,10 @@ use League\Fractal\TransformerAbstract;
 
 class EnrolleeTransformer extends TransformerAbstract
 {
-    protected $defaultIncludes = [
-        'dependent',
-        'parent'
-    ];
+//    protected $defaultIncludes = [
+//        'children',
+//        'parent'
+//    ];
 
     public function transform(Enrollee $enrollee){
         return [
@@ -32,25 +32,28 @@ class EnrolleeTransformer extends TransformerAbstract
             'state' => $enrollee->state,
             'country' => $enrollee->country,
             'dob' => $enrollee->dob,
-            'status' => ($enrollee->staus == 0) ? 'inactive' : 'active',
-            'enrollee_type' => $enrollee->enrollee_type
+            'status' => ($enrollee->status == 0) ? 'false' : 'true',
+            'enrollee_type' => $enrollee->enrollee_type,
+            'plan_name' => $enrollee->plan->name,
+            'organization' => $enrollee->organization->name
         ];
     }
 
-    public function includeDependent(Enrollee $enrollee){
-        if($enrollee->enrollee_type == 'parent'){
-            return $this->collection($enrollee->getChild(), new EnrolleeTransformer());
-        }else{
-            return null;
-        }
-    }
-
-    public function includeParent(Enrollee $enrollee){
-        if($enrollee->enrollee_type == 'child'){
-            return $this->collection($enrollee->getParent(), new EnrolleeTransformer());
-        }else{
-            return null;
-        }
-    }
+//    public function includeChildren(Enrollee $enrollee){
+//        $data = $enrollee->getChild();
+//        if($enrollee->enrollee_type == 'parent'){
+//            return $this->collection($data, new EnrolleeTransformer);
+//        }else{
+//            return null;
+//        }
+//    }
+//
+//    public function includeParent(Enrollee $enrollee){
+//        if($enrollee->enrollee_type == 'child'){
+//            return $this->collection($enrollee->getParent(), new EnrolleeTransformer);
+//        }else{
+//            return null;
+//        }
+//    }
 
 }
