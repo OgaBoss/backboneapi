@@ -52,7 +52,9 @@ $factory->define(App\Enrollee::class, function(Faker\Generator $faker){
         'last_name' => $faker->lastName,
         'organization_id' => 1,
         'hmo_id' => 1,
-        'generated_id' => 'KBU/LAG/0000'.$faker->numberBetween(1,40),
+        'plan_id' => 1,
+        'dependent_id' => 5,
+        'generated_id' => ucwords(substr($faker->unique()->company, 0, 3)).'/LAG/0000'.$faker->numberBetween(1,20),
         'image_url' => $faker->imageUrl(200, 200, 'people'),
         'phone' => $faker->unique()->phoneNumber,
         'email' => $faker->unique()->safeEmail,
@@ -62,16 +64,16 @@ $factory->define(App\Enrollee::class, function(Faker\Generator $faker){
         'country' => 'Nigeria',
         'status' => 0,
         'dob' => $faker->date($format = 'Y-m-d', $max = 'now'),
-        'enrollee_type' => 'child',
-        'dependent_id' => 8
+        'enrollee_type' => 'child'
     ];
 });
 
 $factory->define(App\Organization::class, function(Faker\Generator $faker){
    return [
-       'name' => $faker->unique()->companyEmail,
+       'name' => $faker->unique()->company,
        'hmo_id' => 1,
-       'generated_id' => 'MTN/LAG/0000'.$faker->numberBetween(1,20),
+       'plan_id' => 1,
+       'generated_id' => ucwords(substr($faker->unique()->company, 0, 3)).'/LAG/0000'.$faker->numberBetween(1,20),
        'phone' => $faker->unique()->phoneNumber,
        'email' => $faker->unique()->safeEmail,
        'industry' => 'Communication and Technology',
@@ -80,4 +82,15 @@ $factory->define(App\Organization::class, function(Faker\Generator $faker){
        'state' => 'Lagos',
        'country' => 'Nigeria',
    ];
+});
+
+$factory->define(App\Plan::class, function(Faker\Generator $faker){
+    return [
+        'name' => $faker->unique()->lastName,
+        'hmo_id' => 1,
+        'premium' => ceil(($faker->unique()->biasedNumberBetween($min = 2000, $max = 10000)) / 100 ) * 100,
+        'cover_limit' => ceil(($faker->unique()->biasedNumberBetween($min = 100000, $max = 700000)) / 1000 ) * 1000,
+        'procedure' => null,
+        'ailment' => null,
+    ];
 });

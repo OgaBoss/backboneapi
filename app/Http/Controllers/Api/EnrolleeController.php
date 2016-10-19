@@ -19,7 +19,7 @@ class EnrolleeController extends Controller
     protected $enrolleeTransformer;
 
     public function __construct(Enrollee $enrollee, Manager $manager, EnrolleeTransformer $enrolleeTransformer){
-        $this->middleware('jwt.auth');
+        //$this->middleware('jwt.auth');
         $this->fractal = $manager;
         $this->enrollee = $enrollee;
         $this->enrolleeTransformer = $enrolleeTransformer;
@@ -69,6 +69,12 @@ class EnrolleeController extends Controller
     public function show($id)
     {
         //
+        $item = new Item($this->enrollee->find($id), $this->enrolleeTransformer);
+        $data = $this->fractal->createData($item);
+        return response()->json(['enrollee' => $data->toArray()], 200);
+
+
+
     }
 
     /**

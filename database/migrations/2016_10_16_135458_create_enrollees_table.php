@@ -18,6 +18,7 @@ class CreateEnrolleesTable extends Migration
             $table->integer('hmo_id')->unsigned();
             $table->integer('organization_id')->unsigned();
             $table->integer('dependent_id')->unsigned()->nullable();
+            $table->integer('plan_id')->unsigned()->nullable();
             $table->string('generated_id');
             $table->string('first_name');
             $table->string('last_name', 100);
@@ -36,6 +37,7 @@ class CreateEnrolleesTable extends Migration
             $table->foreign('hmo_id')->references('id')->on('hmos');
             $table->foreign('dependent_id')->references('id')->on('enrollees');
             $table->foreign('organization_id')->references('id')->on('organizations');
+            $table->foreign('plan_id')->references('id')->on('plans');
 
         });
     }

@@ -16,6 +16,7 @@ class CreateOrganizationsTable extends Migration
         Schema::create('organizations', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('hmo_id')->unsigned();
+            $table->integer('plan_id')->unsigned();
             $table->string('generated_id');
             $table->string('name', 100);
             $table->string('industry', 100);
@@ -28,6 +29,7 @@ class CreateOrganizationsTable extends Migration
             $table->timestamps();
 
             $table->foreign('hmo_id')->references('id')->on('hmos');
+            $table->foreign('plan_id')->references('id')->on('plans');
         });
     }
 
