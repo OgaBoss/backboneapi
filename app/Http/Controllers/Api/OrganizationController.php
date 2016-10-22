@@ -7,11 +7,23 @@ use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Controller;
 use League\Fractal\Resource\Collection;
-use App\Transformers\EnrolleeTransformer;
-use App\Repositories\EnrolleeRepository as Enrollee;
+use App\Transformers\OrganizationTransformer;
+use App\Repositories\OrganizationRepository as Organization;
 
 class OrganizationController extends Controller
 {
+
+    protected $fractal;
+    protected $organization;
+    protected $organizationTransformer;
+
+    public function __construct(Organization $organization, Manager $manager, OrganizationTransformer $organizationTransformer){
+        //$this->middleware('jwt.auth');
+        $this->fractal = $manager;
+        $this->organization = $organization;
+        $this->organizationTransformer = $organizationTransformer;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -20,6 +32,10 @@ class OrganizationController extends Controller
     public function index()
     {
         //
+        $collection = new Collection($this->organization->all(), $this->organizationTransformer);
+        $data = $this->fractal->createData($collection);
+        return response()->json(['organizations' => $data->toArray()], 200);
+
     }
 
     /**

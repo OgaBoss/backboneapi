@@ -22,6 +22,7 @@ class CreateOrganizationsTable extends Migration
             $table->string('industry', 100);
             $table->string('phone');
             $table->string('email');
+            $table->string('street_address');
             $table->string('lg');
             $table->string('city');
             $table->string('state');

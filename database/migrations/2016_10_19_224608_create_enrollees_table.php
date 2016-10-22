@@ -13,6 +13,7 @@ class CreateEnrolleesTable extends Migration
      */
     public function up()
     {
+        //
         Schema::create('enrollees', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('hmo_id')->unsigned();
@@ -26,6 +27,7 @@ class CreateEnrolleesTable extends Migration
             $table->string('phone');
             $table->string('email')->unique();
             $table->string('lg');
+            $table->string('street_address');
             $table->string('city');
             $table->string('state');
             $table->string('country');
@@ -38,8 +40,8 @@ class CreateEnrolleesTable extends Migration
             $table->foreign('dependent_id')->references('id')->on('enrollees');
             $table->foreign('organization_id')->references('id')->on('organizations');
             $table->foreign('plan_id')->references('id')->on('plans');
-
         });
+
     }
 
     /**

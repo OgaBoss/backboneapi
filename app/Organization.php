@@ -13,4 +13,8 @@ class Organization extends Model
     public function enrollees(){
         return $this->hasMany('App\Enrollee');
     }
+
+    public function plan(){
+        return $this->belongsTo('App\Plan');
+    }
 }

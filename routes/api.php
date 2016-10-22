@@ -30,6 +30,12 @@ $api->version(['v1', 'middleware' => 'api|cors'], function($api){
         'uses' => 'App\Http\Controllers\Api\LoginController@getAuthenticatedUser'
     ]);
 
+    $api->get('enrollee/getChildren/{id}', [
+        'as' => 'getChildren',
+        'uses' => 'App\Http\Controllers\Api\EnrolleeController@getChildren'
+    ]);
+
     $api->resource('enrollees','App\Http\Controllers\Api\EnrolleeController');
+    $api->resource('organizations','App\Http\Controllers\Api\OrganizationController');
 });
 

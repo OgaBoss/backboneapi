@@ -13,11 +13,6 @@ use League\Fractal\TransformerAbstract;
 
 class EnrolleeTransformer extends TransformerAbstract
 {
-//    protected $defaultIncludes = [
-//        'children',
-//        'parent'
-//    ];
-
     public function transform(Enrollee $enrollee){
         return [
             'enrollee_id' => (int) $enrollee->id,
@@ -28,6 +23,7 @@ class EnrolleeTransformer extends TransformerAbstract
             'phone' => $enrollee->phone,
             'email' => $enrollee->email,
             'lg' => $enrollee->lg,
+            'street' => $enrollee->street_address,
             'city' => $enrollee->city,
             'state' => $enrollee->state,
             'country' => $enrollee->country,
@@ -38,22 +34,4 @@ class EnrolleeTransformer extends TransformerAbstract
             'organization' => $enrollee->organization->name
         ];
     }
-
-//    public function includeChildren(Enrollee $enrollee){
-//        $data = $enrollee->getChild();
-//        if($enrollee->enrollee_type == 'parent'){
-//            return $this->collection($data, new EnrolleeTransformer);
-//        }else{
-//            return null;
-//        }
-//    }
-//
-//    public function includeParent(Enrollee $enrollee){
-//        if($enrollee->enrollee_type == 'child'){
-//            return $this->collection($enrollee->getParent(), new EnrolleeTransformer);
-//        }else{
-//            return null;
-//        }
-//    }
-
 }

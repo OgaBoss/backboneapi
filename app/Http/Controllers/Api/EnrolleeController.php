@@ -72,9 +72,6 @@ class EnrolleeController extends Controller
         $item = new Item($this->enrollee->find($id), $this->enrolleeTransformer);
         $data = $this->fractal->createData($item);
         return response()->json(['enrollee' => $data->toArray()], 200);
-
-
-
     }
 
     /**
@@ -109,5 +106,15 @@ class EnrolleeController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getChildren($id){
+        $enrollee = $this->enrollee->find($id);
+        $children = $enrollee->getChild;
+
+        $collection = new Collection($children, $this->enrolleeTransformer);
+        $data = $this->fractal->createData($collection);
+        return response()->json(['dependents' => $data->toArray()], 200);
+
     }
 }
