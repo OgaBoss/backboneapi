@@ -35,6 +35,16 @@ $api->version(['v1', 'middleware' => 'api|cors'], function($api){
         'uses' => 'App\Http\Controllers\Api\EnrolleeController@getChildren'
     ]);
 
+    $api->get('state', [
+        'as' => 'state',
+        'uses' => 'App\Http\Controllers\Api\PlacesController@getState'
+    ]);
+
+    $api->get('lg',[
+        'as' => 'lg',
+        'uses' => 'App\Http\Controllers\Api\PlacesController@getLgs'
+    ]);
+
     $api->resource('enrollees','App\Http\Controllers\Api\EnrolleeController');
     $api->resource('organizations','App\Http\Controllers\Api\OrganizationController');
 });

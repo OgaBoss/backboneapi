@@ -2,27 +2,33 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Library\Utilities;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Controller;
+use App\Repositories\HmoRepository;
 use League\Fractal\Resource\Collection;
 use App\Transformers\EnrolleeTransformer;
 use App\Repositories\EnrolleeRepository as Enrollee;
-
-
 
 class EnrolleeController extends Controller
 {
     protected $fractal;
     protected $enrollee;
     protected $enrolleeTransformer;
+    protected $request;
+    protected $utility;
+    protected $hmo;
 
-    public function __construct(Enrollee $enrollee, Manager $manager, EnrolleeTransformer $enrolleeTransformer){
-        //$this->middleware('jwt.auth');
+    public function __construct(Enrollee $enrollee, Manager $manager, EnrolleeTransformer $enrolleeTransformer, Request $request, Utilities $utilities, HmoRepository $hmoRepository){
+        $this->middleware('jwt.auth');
         $this->fractal = $manager;
         $this->enrollee = $enrollee;
         $this->enrolleeTransformer = $enrolleeTransformer;
+        $this->request = $request;
+        $this->utility = $utilities;
+        $this->hmo = $hmoRepository;
     }
 
     /**
@@ -32,8 +38,8 @@ class EnrolleeController extends Controller
      */
     public function index()
     {
-        //
-        $collection = new Collection($this->enrollee->all(), $this->enrolleeTransformer);
+        //Get the current users HMO
+        $collection = new Collection($this->getUserHmo()->enrollee, $this->enrolleeTransformer);
         $data = $this->fractal->createData($collection);
         return response()->json(['enrollees' => $data->toArray()], 200);
 
@@ -116,5 +122,12 @@ class EnrolleeController extends Controller
         $data = $this->fractal->createData($collection);
         return response()->json(['dependents' => $data->toArray()], 200);
 
+    }
+
+    protected function getUserHmo(){
+        $data = $this->utility->getAuthenticatedUser();
+        $hmo = $this->hmo->find($data['data']['hmo']['data']['hmo_id']);
+
+        return $hmo;
     }
 }

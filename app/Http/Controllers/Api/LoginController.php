@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use JWTAuth;
 use App\User;
+use App\Library\Utilities;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
@@ -19,11 +20,13 @@ class LoginController extends Controller
     //
     protected $user;
     protected $fractal;
+    protected $utility;
 
 
-    public function __construct(UserTransformer $userTransformer, Manager $manager){
+    public function __construct(UserTransformer $userTransformer, Manager $manager, Utilities $utilities){
         $this->user = $userTransformer;
         $this->fractal = $manager;
+        $this->utility = $utilities;
     }
 
     public function authenticate(Request $request){
@@ -45,24 +48,6 @@ class LoginController extends Controller
     }
 
     public function getAuthenticatedUser(){
-        try {
-            if (! $user = JWTAuth::parseToken()->authenticate()) {
-                return response()->json(['user_not_found'], 404);
-            }
-        } catch (TokenExpiredException $e) {
-            return response()->json(['token_expired'], $e->getStatusCode());
-        } catch (TokenInvalidException $e) {
-            return response()->json(['token_invalid'], $e->getStatusCode());
-        } catch (JWTException $e) {
-            return response()->json(['token_absent'], $e->getStatusCode());
-        }
-        $data = $this->getCurrentUser($user);
-        return response()->json(['user_data' => $data], 200);
-    }
-
-    protected function getCurrentUser($user){
-        $collection = new Item($user, $this->user);
-        $data = $this->fractal->createData($collection)->toArray();
-        return $data;
+        return response()->json(['user_data' => $this->utility->getAuthenticatedUser()], 200);
     }
 }

@@ -10,4 +10,12 @@ class Hmo extends Model
     public function user(){
         return $this->hasMany('App\User');
     }
+
+    public function enrollee(){
+       return $this->hasMany('App\Enrollee');
+    }
+
+    public function organization(){
+        return $this->hasMany('App\Organization');
+    }
 }
