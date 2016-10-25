@@ -21,6 +21,14 @@ class EnrolleeController extends Controller
     protected $utility;
     protected $hmo;
 
+    /**
+     * @param Enrollee $enrollee
+     * @param Manager $manager
+     * @param EnrolleeTransformer $enrolleeTransformer
+     * @param Request $request
+     * @param Utilities $utilities
+     * @param HmoRepository $hmoRepository
+     */
     public function __construct(Enrollee $enrollee, Manager $manager, EnrolleeTransformer $enrolleeTransformer, Request $request, Utilities $utilities, HmoRepository $hmoRepository){
         $this->middleware('jwt.auth');
         $this->fractal = $manager;
@@ -39,7 +47,7 @@ class EnrolleeController extends Controller
     public function index()
     {
         //Get the current users HMO
-        $collection = new Collection($this->getUserHmo()->enrollee, $this->enrolleeTransformer);
+        $collection = new Collection($this->utility->getCurrentUserHmo()->enrollee, $this->enrolleeTransformer);
         $data = $this->fractal->createData($collection);
         return response()->json(['enrollees' => $data->toArray()], 200);
 
@@ -53,6 +61,11 @@ class EnrolleeController extends Controller
     public function create()
     {
         //
+        if($this->request->hasFile('file')){
+            dd($this->request->file('file')->getClientOriginalExtension());
+        }else{
+            dd(null);
+        }
     }
 
     /**
@@ -112,6 +125,17 @@ class EnrolleeController extends Controller
     public function destroy($id)
     {
         //
+        $enrollee = $this->enrollee->find($id);
+        if($enrollee != null){
+            $enrollee->delete();
+            if($this->enrollee->find($id) == null){
+                return response()->json(['msg' => 'Enrollee Deleted'], 200);
+            }else{
+
+            }
+        }else{
+            return response()->json(['error' => 'This enrollee does not exist'], 200);
+        }
     }
 
     public function getChildren($id){
@@ -122,12 +146,5 @@ class EnrolleeController extends Controller
         $data = $this->fractal->createData($collection);
         return response()->json(['dependents' => $data->toArray()], 200);
 
-    }
-
-    protected function getUserHmo(){
-        $data = $this->utility->getAuthenticatedUser();
-        $hmo = $this->hmo->find($data['data']['hmo']['data']['hmo_id']);
-
-        return $hmo;
     }
 }

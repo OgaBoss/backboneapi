@@ -10,6 +10,7 @@
 namespace App\Library;
 
 use JWTAuth;
+use App\Repositories\HmoRepository as Hmo;
 use App\User;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
@@ -25,14 +26,19 @@ class Utilities
     protected $request;
     protected $user;
     protected $fractal;
+    protected $hmo;
 
     /**
+     * @param UserTransformer $userTransformer
      * @param Request $request
+     * @param Manager $manager
+     * @param Hmo $hmo
      */
-    public function __construct(UserTransformer $userTransformer, Request $request, Manager $manager){
+    public function __construct(UserTransformer $userTransformer, Request $request, Manager $manager, Hmo $hmo){
         $this->request = $request;
         $this->user = $userTransformer;
         $this->fractal = $manager;
+        $this->hmo = $hmo;
     }
 
     /**
@@ -54,6 +60,12 @@ class Utilities
         return $data;
     }
 
+    public function  getCurrentUserHmo(){
+        $data = $this->getAuthenticatedUser();
+        $hmo = $this->hmo->find($data['data']['hmo']['data']['hmo_id']);
+
+        return $hmo;
+    }
 
     /**
      * @param $user
@@ -64,6 +76,7 @@ class Utilities
         $data = $this->fractal->createData($collection)->toArray();
         return $data;
     }
+
 
 
 }

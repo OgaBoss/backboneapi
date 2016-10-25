@@ -3,37 +3,37 @@
 namespace App\Http\Controllers\Api;
 
 use App\Library\Utilities;
+use App\Repositories\PlanRepository;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Controller;
 use App\Repositories\HmoRepository;
 use League\Fractal\Resource\Collection;
-use App\Transformers\OrganizationTransformer;
-use App\Repositories\OrganizationRepository as Organization;
+use App\Transformers\PlanTransformer;
+use App\Repositories\PlanRepository as Plan;
 
-class OrganizationController extends Controller
+class PlanController extends Controller
 {
-
-    protected $fractal;
-    protected $organization;
-    protected $organizationTransformer;
     protected $utility;
+    protected $fractal;
+    protected $plan;
+    protected $planTransformer;
     protected $hmo;
 
     /**
-     * @param Organization $organization
      * @param Manager $manager
-     * @param OrganizationTransformer $organizationTransformer
+     * @param Plan $plan
+     * @param PlanTransformer $planTransformer
      * @param Utilities $utilities
      * @param HmoRepository $hmoRepository
      */
-    public function __construct(Organization $organization, Manager $manager, OrganizationTransformer $organizationTransformer, Utilities $utilities, HmoRepository $hmoRepository){
+    public function __construct(Manager $manager, Plan $plan, PlanTransformer $planTransformer,Utilities $utilities, HmoRepository $hmoRepository){
         $this->middleware('jwt.auth');
-        $this->fractal = $manager;
-        $this->organization = $organization;
-        $this->organizationTransformer = $organizationTransformer;
         $this->utility = $utilities;
+        $this->fractal = $manager;
+        $this->plan =  $plan;
+        $this->planTransformer = $planTransformer;
         $this->hmo = $hmoRepository;
     }
 
@@ -44,11 +44,9 @@ class OrganizationController extends Controller
      */
     public function index()
     {
-        //
-        $collection = new Collection($this->getUserHmo()->organization, $this->organizationTransformer);
+        $collection = new Collection($this->utility->getCurrentUserHmo()->plan, $this->planTransformer);
         $data = $this->fractal->createData($collection);
-        return response()->json(['organizations' => $data->toArray()], 200);
-
+        return response()->json(['plans' => $data->toArray()], 200);
     }
 
     /**
@@ -115,12 +113,5 @@ class OrganizationController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    protected function getUserHmo(){
-        $data = $this->utility->getAuthenticatedUser();
-        $hmo = $this->hmo->find($data['data']['hmo']['data']['hmo_id']);
-
-        return $hmo;
     }
 }

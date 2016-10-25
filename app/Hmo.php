@@ -18,4 +18,8 @@ class Hmo extends Model
     public function organization(){
         return $this->hasMany('App\Organization');
     }
+
+    public function plan(){
+        return $this->hasMany('App\Plan');
+    }
 }

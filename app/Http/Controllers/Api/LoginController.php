@@ -22,7 +22,11 @@ class LoginController extends Controller
     protected $fractal;
     protected $utility;
 
-
+    /**
+     * @param UserTransformer $userTransformer
+     * @param Manager $manager
+     * @param Utilities $utilities
+     */
     public function __construct(UserTransformer $userTransformer, Manager $manager, Utilities $utilities){
         $this->user = $userTransformer;
         $this->fractal = $manager;
