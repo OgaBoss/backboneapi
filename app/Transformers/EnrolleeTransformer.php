@@ -19,7 +19,7 @@ class EnrolleeTransformer extends TransformerAbstract
             'generated_id' => $enrollee->generated_id,
             'first_name' => $enrollee->first_name,
             'last_name' => $enrollee->last_name,
-            'image_url' => $enrollee->image_url,
+            'image_url' => ($enrollee->image_url == '' || $enrollee->image_url == null)   ? null : $enrollee->image_url ,
             'phone' => $enrollee->phone,
             'email' => $enrollee->email,
             'lg' => $enrollee->lg,

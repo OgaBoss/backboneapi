@@ -15,6 +15,7 @@ class PlanTransformer extends TransformerAbstract
 {
     public function transform(Plan $plan){
         return [
+            'plan_id' => $plan->id,
             'name' => $plan->name,
             'premium' => $plan->premium,
             'cover' => $plan->cover_limit

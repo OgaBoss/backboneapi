@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE, PATCH');
 header("Access-Control-Allow-Headers: Authorization, X-Requested-With,  Content-Type, Accept");
 
 $api = app('Dingo\Api\Routing\Router');

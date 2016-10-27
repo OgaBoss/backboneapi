@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Hashids\Hashids;
 use App\Library\Utilities;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
@@ -54,21 +55,6 @@ class EnrolleeController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-        if($this->request->hasFile('file')){
-            dd($this->request->file('file')->getClientOriginalExtension());
-        }else{
-            dd(null);
-        }
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -76,7 +62,8 @@ class EnrolleeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $this->enrollee->create($this->convertEnrolleeRequestObjectToArray());
+        return response()->json(['enrollee' => $data->toArray()], 200);
     }
 
     /**
@@ -94,17 +81,6 @@ class EnrolleeController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -114,6 +90,12 @@ class EnrolleeController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $data = $this->enrollee->update($this->request->all(), $id);
+        if($data == 1){
+            return response()->json(['success' => 'Enrollee data updated'], 200);
+        }else{
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
     }
 
     /**
@@ -145,6 +127,42 @@ class EnrolleeController extends Controller
         $collection = new Collection($children, $this->enrolleeTransformer);
         $data = $this->fractal->createData($collection);
         return response()->json(['dependents' => $data->toArray()], 200);
+
+    }
+
+    protected function convertEnrolleeRequestObjectToArray(){
+        $inComing = $this->request;
+
+        return [
+            'hmo_id'            => count($inComing->hmo_id) > 0 ? (int)$inComing->hmo_id : null,
+            'organization_id'   => count($inComing->organization_id) > 0 ? (int)$inComing->organization_id : null,
+            'plan_id'           => count($inComing->plan_id) > 0 ? (int)$inComing->plan_id : null,
+            'generated_id'      => $this->generateUniqueId($inComing),
+            'first_name'        => count($inComing->first_name) > 0 ? $inComing->first_name : null,
+            'last_name'         => count($inComing->last_name) > 0 ? $inComing->last_name : null,
+            'phone'             => count($inComing->phone) > 0 ? $inComing->phone : null,
+            'email'             => count($inComing->email) > 0 ? $inComing->email : null,
+            'lg'                => count($inComing->lg) > 0 ? $inComing->lg : null,
+            'state'             => count($inComing->state) > 0 ? $inComing->state : null,
+            'country'           => count($inComing->country) > 0 ? $inComing->country : null,
+            'sex'               => count($inComing->sex) > 0 ? $inComing->sex : null,
+            'city'              => count($inComing->city) > 0 ? $inComing->city : null,
+            'street_address'    => count($inComing->street_address) > 0 ? $inComing->street_address : null,
+            'dob'               => count($inComing->dob) > 0 ? $inComing->dob : null,
+            'status'            => count($inComing->status) > 0 ? $inComing->status : null,
+            'enrollee_type'     => count($inComing->enrollee_type) > 0 ? $inComing->enrollee_type : null,
+            'image_url'         => count($inComing->image_url) > 0 ? $inComing->image_url : null,
+        ];
+    }
+
+    protected function generateUniqueId($inComing){
+        $hashIds = new Hashids($inComing->email);
+
+        $org = strtoupper(substr($inComing->organization_name, 0,3));
+        $state = strtoupper(substr($inComing->state, 0,3));
+        $uniqueId = $hashIds->encode(1,2,3);
+
+        return $org.'/'.$state.'/'.$uniqueId;
 
     }
 }
