@@ -16,7 +16,6 @@ class OrganizationTransformer extends TransformerAbstract
     public function transform(Organization $organization){
         return [
             'organization_id' => $organization->id,
-            'plan_name' => $organization->plan->name,
             'generated_id' => $organization->generated_id,
             'name' => $organization->name,
             'industry' => $organization->industry,

@@ -15,6 +15,8 @@ class Organization extends Model
     }
 
     public function plan(){
-        return $this->belongsTo('App\Plan');
+        return $this->belongsToMany('App\Plan', 'organizations_plans');
     }
+
+
 }

@@ -31,7 +31,9 @@ class EnrolleeTransformer extends TransformerAbstract
             'status' => ($enrollee->status == 0) ? 'false' : 'true',
             'enrollee_type' => $enrollee->enrollee_type,
             'plan_name' => $enrollee->plan->name,
-            'organization' => $enrollee->organization->name
+            'organization' => $enrollee->organization->name,
+            'organization_id' => $enrollee->organization->id,
+            'sex' => $enrollee->sex
         ];
     }
 }

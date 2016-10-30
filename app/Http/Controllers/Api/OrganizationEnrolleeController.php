@@ -2,53 +2,42 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Library\Utilities;
+
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Controller;
-use App\Repositories\HmoRepository;
 use League\Fractal\Resource\Collection;
-use App\Transformers\OrganizationTransformer;
+use App\Transformers\EnrolleeTransformer;
 use App\Repositories\OrganizationRepository as Organization;
 
-class OrganizationController extends Controller
+class OrganizationEnrolleeController extends Controller
 {
-
     protected $fractal;
     protected $organization;
-    protected $organizationTransformer;
-    protected $utility;
-    protected $hmo;
+    protected $enrolleeTransformer;
 
-    /**
-     * @param Organization $organization
-     * @param Manager $manager
-     * @param OrganizationTransformer $organizationTransformer
-     * @param Utilities $utilities
-     * @param HmoRepository $hmoRepository
-     */
-    public function __construct(Organization $organization, Manager $manager, OrganizationTransformer $organizationTransformer, Utilities $utilities, HmoRepository $hmoRepository){
+
+    public function __construct(Manager $manager, Organization $organization, EnrolleeTransformer $enrolleeTransformer){
         $this->middleware('jwt.auth');
         $this->fractal = $manager;
         $this->organization = $organization;
-        $this->organizationTransformer = $organizationTransformer;
-        $this->utility = $utilities;
-        $this->hmo = $hmoRepository;
+        $this->enrolleeTransformer = $enrolleeTransformer;
     }
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($organization_id)
     {
         //
-        $collection = new Collection($this->getUserHmo()->organization, $this->organizationTransformer);
-        $data = $this->fractal->createData($collection);
-        return response()->json(['organizations' => $data->toArray()], 200);
+        $organization = $this->organization->find($organization_id);
+        $enrollees = $organization->enrollees;
 
+        $collection = new Collection($enrollees, $this->enrolleeTransformer);
+        $data = $this->fractal->createData($collection);
+        return response()->json(['enrollees' => $data->toArray()], 200);
     }
 
     /**
@@ -81,9 +70,6 @@ class OrganizationController extends Controller
     public function show($id)
     {
         //
-        $item = new Item($this->organization->find($id), $this->organizationTransformer);
-        $data = $this->fractal->createData($item);
-        return response()->json(['organization' => $data->toArray()], 200);
     }
 
     /**
@@ -118,12 +104,5 @@ class OrganizationController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    protected function getUserHmo(){
-        $data = $this->utility->getAuthenticatedUser();
-        $hmo = $this->hmo->find($data['data']['hmo']['data']['hmo_id']);
-
-        return $hmo;
     }
 }

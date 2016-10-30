@@ -163,6 +163,9 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        JD\Cloudder\CloudderServiceProvider::class,
+        Webcraft\Random\RandomServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -230,6 +233,9 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Cloudder' => JD\Cloudder\Facades\Cloudder::class,
+        'Random' => Webcraft\Random\RandomFacade::class,
 
     ],
 

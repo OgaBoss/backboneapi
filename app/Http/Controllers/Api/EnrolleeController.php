@@ -7,6 +7,7 @@ use App\Library\Utilities;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
+use JD\Cloudder\Facades\Cloudder;
 use App\Http\Controllers\Controller;
 use App\Repositories\HmoRepository;
 use League\Fractal\Resource\Collection;
@@ -31,7 +32,7 @@ class EnrolleeController extends Controller
      * @param HmoRepository $hmoRepository
      */
     public function __construct(Enrollee $enrollee, Manager $manager, EnrolleeTransformer $enrolleeTransformer, Request $request, Utilities $utilities, HmoRepository $hmoRepository){
-        $this->middleware('jwt.auth');
+        $this->middleware('jwt.auth', ['except' => 'storeEnrolleeImage']);
         $this->fractal = $manager;
         $this->enrollee = $enrollee;
         $this->enrolleeTransformer = $enrolleeTransformer;
@@ -130,6 +131,25 @@ class EnrolleeController extends Controller
 
     }
 
+    public function storeEnrolleeImage($id){
+        if($this->request->hasFile('image')){
+            $file_size = ($this->request->file('image')->getClientSize()) / 1000;
+            if($file_size > 1000){
+                return response()->json(['error' => 'Please upload an png, jpeg, jpg file of 1MB or less'], 500);
+            }else{
+                $url = $this->postEnrolleeImageToCloud();
+                $data = $this->enrollee->update(['image_url' => urldecode($url)], $id);
+                if($data == 1){
+                    return response()->json(['success' => 'Enrollee data updated', 'url' => urldecode($url)], 200);
+                }else{
+                    return response()->json(['error' => 'Something went wrong'], 500);
+                }
+            }
+        }else{
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
+    }
+
     protected function convertEnrolleeRequestObjectToArray(){
         $inComing = $this->request;
 
@@ -164,5 +184,16 @@ class EnrolleeController extends Controller
 
         return $org.'/'.$state.'/'.$uniqueId;
 
+    }
+
+    protected function postEnrolleeImageToCloud(){
+        $extension = $this->request->file('image')->getClientOriginalExtension();
+        $fileName = $this->request->email . '.' . $extension;
+        $uploaded_file = $this->request->file('image')->move(base_path().'/public/img', $fileName);
+
+        Cloudder::upload($uploaded_file->getPathname(),$this->request->email, ['folder' => 'EnrolleeImages']);
+        unlink(base_path().'/public/img/'.$fileName);
+        $result = Cloudder::getResult();
+        return $result['url'];
     }
 }
