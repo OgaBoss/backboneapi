@@ -53,9 +53,11 @@ $factory->define(App\Enrollee::class, function(Faker\Generator $faker){
         'organization_id' => 1,
         'hmo_id' => 1,
         'plan_id' => 1,
-        'dependent_id' => 3,
+        'dependent_id' => 23,
+        'hospital_id' => 5,
+        'sex' => 'Male',
         'generated_id' => strtoupper(substr($faker->unique()->company, 0, 3)).'/LAG/0000'.$faker->numberBetween(1,20),
-        'image_url' => $faker->imageUrl(200, 200, 'people'),
+        'image_url' => '',
         'phone' => $faker->unique()->phoneNumber,
         'email' => $faker->unique()->safeEmail,
         'city' =>  $faker->unique()->city,
@@ -96,3 +98,40 @@ $factory->define(App\Plan::class, function(Faker\Generator $faker){
         'ailment' => null,
     ];
 });
+
+$factory->define(App\Pharmacy::class, function(Faker\Generator $faker){
+    return [
+        'name' => $faker->unique()->company,
+        'band_id' => 1,
+        'generated_id' => strtoupper(substr($faker->unique()->company, 0, 3)).'/LAG/0000'.$faker->unique()->numberBetween(1,20),
+        'phone' => $faker->unique()->e164PhoneNumber,
+        'email' => $faker->unique()->safeEmail,
+        'city' =>  $faker->unique()->city,
+        'lg' => 'Lagos Mainland',
+        'street_address' => $faker->streetAddress,
+        'state' => 'Lagos',
+        'country' => 'Nigeria',
+        'bank' => 'Access Bank',
+        'account_number' => '51915734310'
+    ];
+});
+
+$factory->define(App\Hospital::class, function(Faker\Generator $faker){
+    return [
+        'name' => $faker->unique()->company,
+        'band_id' => 1,
+        'generated_id' => strtoupper(substr($faker->unique()->company, 0, 3)).'/LAG/0000'.$faker->unique()->numberBetween(1,20),
+        'phone' => $faker->unique()->e164PhoneNumber,
+        'email' => $faker->unique()->safeEmail,
+        'city' =>  $faker->unique()->city,
+        'lg' => 'Lagos Mainland',
+        'street_address' => $faker->streetAddress,
+        'state' => 'Lagos',
+        'country' => 'Nigeria',
+        'bank' => 'Access Bank',
+        'account_number' => '51915734310'
+    ];
+});
+
+
+

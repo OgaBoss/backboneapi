@@ -59,6 +59,8 @@ $api->version(['v1', 'middleware' => 'api|cors'], function($api){
     $api->resource('enrollees','App\Http\Controllers\Api\EnrolleeController');
     $api->resource('organizations','App\Http\Controllers\Api\OrganizationController');
     $api->resource('plans','App\Http\Controllers\Api\PlanController');
+    $api->resource('hospitals','App\Http\Controllers\Api\HospitalController');
+    $api->resource('pharmacies','App\Http\Controllers\Api\PharmacyController');
 
     $api->resource('organizations.enrollees','App\Http\Controllers\Api\OrganizationEnrolleeController');
     $api->resource('organizations.plans','App\Http\Controllers\Api\OrganizationPlanController');

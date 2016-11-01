@@ -22,4 +22,13 @@ class Hmo extends Model
     public function plan(){
         return $this->hasMany('App\Plan');
     }
+
+    public function hospital(){
+        return $this->belongsToMany('App\Hospital', 'hmo_hospital');
+    }
+
+    public function pharmacy(){
+        return $this->belongsToMany('App\Pharmacy', 'hmo_pharmacy');
+    }
+
 }

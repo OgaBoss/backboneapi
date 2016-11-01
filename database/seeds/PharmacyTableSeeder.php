@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class EnrolleeTableSeeder extends Seeder
+class PharmacyTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +11,7 @@ class EnrolleeTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Enrollee::class, 5)->create();
+        //
+        factory(App\Pharmacy::class, 20)->create();
     }
 }

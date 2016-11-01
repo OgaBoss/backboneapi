@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Hashids\Hashids;
 use App\Library\Utilities;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class OrganizationController extends Controller
     protected $organizationTransformer;
     protected $utility;
     protected $hmo;
+    protected $request;
 
     /**
      * @param Organization $organization
@@ -28,13 +30,14 @@ class OrganizationController extends Controller
      * @param Utilities $utilities
      * @param HmoRepository $hmoRepository
      */
-    public function __construct(Organization $organization, Manager $manager, OrganizationTransformer $organizationTransformer, Utilities $utilities, HmoRepository $hmoRepository){
+    public function __construct(Organization $organization, Manager $manager, OrganizationTransformer $organizationTransformer, Utilities $utilities, HmoRepository $hmoRepository, Request $request){
         $this->middleware('jwt.auth');
         $this->fractal = $manager;
         $this->organization = $organization;
         $this->organizationTransformer = $organizationTransformer;
         $this->utility = $utilities;
         $this->hmo = $hmoRepository;
+        $this->request =$request;
     }
 
     /**
@@ -70,6 +73,15 @@ class OrganizationController extends Controller
     public function store(Request $request)
     {
         //
+        $data = $this->organization->create($this->convertOrganizationRequestToArray());
+        if(count($data) > 0){
+            //Attach Plans
+            $this->attachPlanToOrganization($data->id);
+            return response()->json(['organization' => $data->toArray()], 200);
+        }else{
+
+        }
+
     }
 
     /**
@@ -125,5 +137,42 @@ class OrganizationController extends Controller
         $hmo = $this->hmo->find($data['data']['hmo']['data']['hmo_id']);
 
         return $hmo;
+    }
+
+    protected function convertOrganizationRequestToArray(){
+        $inComing = $this->request;
+
+        return [
+            'hmo_id' => (int)$inComing->hmo_id,
+            'city' => $inComing->city,
+            'email' => $inComing->email,
+            'name' => $inComing->name,
+            'phone' => $inComing->phone,
+            'state' => $inComing->state,
+            'lg' => $inComing->lg,
+            'industry' => '',
+            'street_address' => $inComing->address,
+            'generated_id' => $this->generateUniqueId($inComing),
+            'country' => 'Nigeria'
+        ];
+    }
+
+    protected function generateUniqueId($inComing){
+        $hashIds = new Hashids($inComing->email);
+
+        $org = strtoupper(substr($inComing->name, 0,3));
+        $state = strtoupper(substr($inComing->state, 0,3));
+        $uniqueId = $hashIds->encode(1,2,3);
+
+        return $org.'/'.$state.'/'.$uniqueId;
+
+    }
+
+    protected function attachPlanToOrganization($id){
+        $inComing = $this->request;
+        $plan = $inComing->plan;
+        $plan = explode(',', $plan);
+        $organization  =  $this->organization->find($id);
+        return $organization->plan()->attach($plan);
     }
 }

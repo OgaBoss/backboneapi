@@ -48,4 +48,11 @@ class Enrollee extends Model
     public function plan(){
         return $this->belongsTo('App\Plan');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function hospital(){
+        return $this->belongsTo('App\Hospital');
+    }
 }

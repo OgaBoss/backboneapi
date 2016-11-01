@@ -8,7 +8,7 @@ class Plan extends Model
 {
     //
     public function organization(){
-        return $this->belongsToMany('App\Organization');
+        return $this->belongsToMany('App\Organization','organizations_plans' );
     }
 
     public function enrollee(){
