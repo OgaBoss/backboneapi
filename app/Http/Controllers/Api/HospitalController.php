@@ -38,7 +38,7 @@ class HospitalController extends Controller
         //Get the current logged in HMO Hospital
         $collection = new Collection($this->utility->getCurrentUserHmo()->hospital, $this->hospitalTransformer);
         $data = $this->fractal->createData($collection);
-        return response()->json(['hospital' => $data->toArray()], 200);
+        return response()->json(['hospitals' => $data->toArray()], 200);
 
     }
 
