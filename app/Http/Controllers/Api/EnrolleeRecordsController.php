@@ -2,38 +2,30 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\MedicalRecord;
 use App\Library\Utilities;
 use League\Fractal\Manager;
-use Illuminate\Http\Request;
-use League\Fractal\Resource\Item;
-use App\Http\Controllers\Controller;
-use App\Repositories\HmoRepository;
 use League\Fractal\Resource\Collection;
-use App\Transformers\PlanTransformer;
-use App\Repositories\PlanRepository as Plan;
+use Illuminate\Http\Request;
+use App\Repositories\EnrolleeRepository as Enrollee;
+use App\Transformers\MedicalRecordsTransformer;
+use App\Repositories\MedicalRecordRepository;
+use App\Http\Controllers\Controller;
+use League\Fractal\Resource\Item;
 
-class PlanController extends Controller
+class EnrolleeRecordsController extends Controller
 {
-    protected $utility;
+    protected $enrollee;
     protected $fractal;
-    protected $plan;
-    protected $planTransformer;
-    protected $hmo;
+    protected $request;
+    protected $medicalTransformer;
 
-    /**
-     * @param Manager $manager
-     * @param Plan $plan
-     * @param PlanTransformer $planTransformer
-     * @param Utilities $utilities
-     * @param HmoRepository $hmoRepository
-     */
-    public function __construct(Manager $manager, Plan $plan, PlanTransformer $planTransformer,Utilities $utilities, HmoRepository $hmoRepository){
-        $this->middleware('jwt.auth');
-        $this->utility = $utilities;
+    public function __construct(Request $request,Enrollee $enrolleeRepository, MedicalRecordsTransformer $medicalRecordsTransformer, Manager$manager){
+        $this->middleware('jwt.auth', ['except' => 'storeEnrolleeImage']);
+        $this->request = $request;
+        $this->medicalTransformer = $medicalRecordsTransformer;
         $this->fractal = $manager;
-        $this->plan =  $plan;
-        $this->planTransformer = $planTransformer;
-        $this->hmo = $hmoRepository;
+        $this->enrollee = $enrolleeRepository;
     }
 
     /**
@@ -41,11 +33,13 @@ class PlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        $collection = new Collection($this->utility->getCurrentUserHmo()->plan, $this->planTransformer);
+        //
+        $collection = new Collection($this->enrollee->find($id)->records, $this->medicalTransformer);
         $data = $this->fractal->createData($collection);
-        return response()->json(['plans' => $data->toArray()], 200);
+        return response()->json(['records' => $data->toArray()], 200);
+
     }
 
     /**

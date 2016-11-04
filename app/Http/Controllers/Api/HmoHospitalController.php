@@ -2,38 +2,28 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Library\Utilities;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Controller;
-use App\Repositories\HmoRepository;
 use League\Fractal\Resource\Collection;
-use App\Transformers\PlanTransformer;
-use App\Repositories\PlanRepository as Plan;
+use App\Transformers\HospitalTransformer;
+use App\Repositories\HmoRepository as Hmo;
 
-class PlanController extends Controller
+class HmoHospitalController extends Controller
 {
-    protected $utility;
     protected $fractal;
-    protected $plan;
-    protected $planTransformer;
     protected $hmo;
+    protected $hospitalTransformer;
 
-    /**
-     * @param Manager $manager
-     * @param Plan $plan
-     * @param PlanTransformer $planTransformer
-     * @param Utilities $utilities
-     * @param HmoRepository $hmoRepository
-     */
-    public function __construct(Manager $manager, Plan $plan, PlanTransformer $planTransformer,Utilities $utilities, HmoRepository $hmoRepository){
+
+    public function __construct(Manager $manager, Hmo $hmo, HospitalTransformer $hospitalTransformer)
+    {
         $this->middleware('jwt.auth');
-        $this->utility = $utilities;
         $this->fractal = $manager;
-        $this->plan =  $plan;
-        $this->planTransformer = $planTransformer;
-        $this->hmo = $hmoRepository;
+        $this->hmo = $hmo;
+        $this->hospitalTransformer = $hospitalTransformer;
+
     }
 
     /**
@@ -41,11 +31,9 @@ class PlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($hmo_id)
     {
-        $collection = new Collection($this->utility->getCurrentUserHmo()->plan, $this->planTransformer);
-        $data = $this->fractal->createData($collection);
-        return response()->json(['plans' => $data->toArray()], 200);
+
     }
 
     /**

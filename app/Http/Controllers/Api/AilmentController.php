@@ -2,38 +2,28 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Disease;
 use App\Library\Utilities;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Controller;
-use App\Repositories\HmoRepository;
+use App\Transformers\AilmentTransformers;
 use League\Fractal\Resource\Collection;
-use App\Transformers\PlanTransformer;
-use App\Repositories\PlanRepository as Plan;
+use App\Repositories\AilmentRepository as Ailment;
 
-class PlanController extends Controller
+
+
+class AilmentController extends Controller
 {
-    protected $utility;
     protected $fractal;
-    protected $plan;
-    protected $planTransformer;
-    protected $hmo;
+    protected $ailment;
+    protected $ailmentTransformer;
 
-    /**
-     * @param Manager $manager
-     * @param Plan $plan
-     * @param PlanTransformer $planTransformer
-     * @param Utilities $utilities
-     * @param HmoRepository $hmoRepository
-     */
-    public function __construct(Manager $manager, Plan $plan, PlanTransformer $planTransformer,Utilities $utilities, HmoRepository $hmoRepository){
-        $this->middleware('jwt.auth');
-        $this->utility = $utilities;
+    public function __construct(Manager $manager, Ailment $ailmentRepository, AilmentTransformers $ailmentTransformers){
         $this->fractal = $manager;
-        $this->plan =  $plan;
-        $this->planTransformer = $planTransformer;
-        $this->hmo = $hmoRepository;
+        $this->ailment = $ailmentRepository;
+        $this->ailmentTransformer = $ailmentTransformers;
     }
 
     /**
@@ -43,9 +33,10 @@ class PlanController extends Controller
      */
     public function index()
     {
-        $collection = new Collection($this->utility->getCurrentUserHmo()->plan, $this->planTransformer);
+        //
+        $collection = new Collection($this->ailment->all()->take(500), $this->ailmentTransformer);
         $data = $this->fractal->createData($collection);
-        return response()->json(['plans' => $data->toArray()], 200);
+        return response()->json(['ailments' => $data->toArray()], 200);
     }
 
     /**
@@ -112,5 +103,12 @@ class PlanController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function search($text){
+        $data =  Disease::where('short_desc', 'LIKE', '%'.$text.'%')->get();
+        $collection = new Collection($data, $this->ailmentTransformer);
+        $data = $this->fractal->createData($collection);
+        return response()->json(['ailments' => $data->toArray()], 200);
     }
 }

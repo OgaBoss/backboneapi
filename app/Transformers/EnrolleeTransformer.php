@@ -34,7 +34,8 @@ class EnrolleeTransformer extends TransformerAbstract
             'organization' => $enrollee->organization->name,
             'organization_id' => $enrollee->organization->id,
             'sex' => $enrollee->sex,
-            'plan'=> $enrollee->plan->name
+            'plan'=> $enrollee->plan->name,
+            'primary_hospital' => $enrollee->hospital->name
         ];
     }
 }

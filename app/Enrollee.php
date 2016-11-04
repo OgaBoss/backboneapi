@@ -55,4 +55,8 @@ class Enrollee extends Model
     public function hospital(){
         return $this->belongsTo('App\Hospital');
     }
+
+    public function records(){
+        return $this->hasMany('App\MedicalRecord');
+    }
 }

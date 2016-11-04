@@ -7,35 +7,20 @@ use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Controller;
-use App\Repositories\HmoRepository;
 use League\Fractal\Resource\Collection;
-use App\Transformers\PlanTransformer;
-use App\Repositories\PlanRepository as Plan;
+use App\Transformers\UserTransformer;
+use App\Repositories\UserRepository as User;
 
-class PlanController extends Controller
+class UserController extends Controller
 {
-    protected $utility;
+    protected $user;
+    protected $userTransformer;
     protected $fractal;
-    protected $plan;
-    protected $planTransformer;
-    protected $hmo;
+    protected $utility;
 
-    /**
-     * @param Manager $manager
-     * @param Plan $plan
-     * @param PlanTransformer $planTransformer
-     * @param Utilities $utilities
-     * @param HmoRepository $hmoRepository
-     */
-    public function __construct(Manager $manager, Plan $plan, PlanTransformer $planTransformer,Utilities $utilities, HmoRepository $hmoRepository){
-        $this->middleware('jwt.auth');
-        $this->utility = $utilities;
-        $this->fractal = $manager;
-        $this->plan =  $plan;
-        $this->planTransformer = $planTransformer;
-        $this->hmo = $hmoRepository;
+    public function __construct(UserTransformer $userTransformer, User $userRepository){
+
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -43,9 +28,8 @@ class PlanController extends Controller
      */
     public function index()
     {
-        $collection = new Collection($this->utility->getCurrentUserHmo()->plan, $this->planTransformer);
-        $data = $this->fractal->createData($collection);
-        return response()->json(['plans' => $data->toArray()], 200);
+        //
+
     }
 
     /**

@@ -31,4 +31,8 @@ class Hmo extends Model
         return $this->belongsToMany('App\Pharmacy', 'hmo_pharmacy');
     }
 
+    public function records(){
+        return $this->hasMany('App\MedicalRecord');
+    }
+
 }
