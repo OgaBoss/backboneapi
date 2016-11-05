@@ -35,7 +35,10 @@ class EnrolleeTransformer extends TransformerAbstract
             'organization_id' => $enrollee->organization->id,
             'sex' => $enrollee->sex,
             'plan'=> $enrollee->plan->name,
-            'primary_hospital' => $enrollee->hospital->name
+            'primary_hospital' => $enrollee->hospital->name,
+            'nhis_status' => $enrollee->nhis_status,
+            'created_at' => $enrollee->created_at->format('Y-m-d')
+
         ];
     }
 }

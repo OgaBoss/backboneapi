@@ -18,7 +18,7 @@ class CreateMedicalRecordsTable extends Migration
             $table->integer('enrollee_id')->unsigned();
             $table->integer('hmo_id')->unsigned();
             $table->integer('hospital_id')->unsigned();
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->string('referral_code');
             $table->string('drug_list')->nullable();
             $table->string('disease')->nullable();

@@ -9,7 +9,9 @@
 
 namespace App\Library;
 
+
 use JWTAuth;
+use Hashids\Hashids;
 use App\Repositories\HmoRepository as Hmo;
 use App\User;
 use League\Fractal\Manager;
@@ -67,6 +69,16 @@ class Utilities
         return $hmo;
     }
 
+    public function generateUniqueId($org, $state, $email){
+        $hashIds = new Hashids($email);
+
+        $org = strtoupper(substr($org, 0,3));
+        $state = strtoupper(substr($state, 0,3));
+        $uniqueId = $hashIds->encode(1,2,3);
+
+        return $org.'/'.$state.'/'.$uniqueId;
+    }
+
     /**
      * @param $user
      * @return mixed
@@ -76,6 +88,7 @@ class Utilities
         $data = $this->fractal->createData($collection)->toArray();
         return $data;
     }
+
 
 
 

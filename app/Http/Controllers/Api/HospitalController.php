@@ -50,7 +50,19 @@ class HospitalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //get uniqueID
+        $uniqueId = $this->utility->generateUniqueId($this->request->name, $this->request->state, $this->request->email);
+
+        $hospital_data = $this->request->all();
+        $hospital_data['generated_id'] = $uniqueId;
+
+        $data = $this->hospital->create($hospital_data);
+        if(count($data) == 1){
+            $this->attachHmoToHospital($data->id);
+            return response()->json(['hospital' => $data->toArray()], 200);
+        }else{
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
     }
 
     /**
@@ -102,5 +114,12 @@ class HospitalController extends Controller
         }else{
             return response()->json(['error' => 'This hospital does not exist'], 200);
         }
+    }
+
+    protected function attachHmoToHospital($hospital)
+    {
+        $hmo = $this->utility->getCurrentUserHmo();
+        $hmo->hospital()->attach($hospital);
+
     }
 }

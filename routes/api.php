@@ -65,6 +65,11 @@ $api->version(['v1', 'middleware' => 'api|cors'], function($api){
         'uses' => 'App\Http\Controllers\Api\AilmentController@search'
     ]);
 
+    $api->get('organizations/{id}/others',[
+        'as' => 'others',
+        'uses' => 'App\Http\Controllers\Api\OrganizationPlanController@others'
+    ]);
+
 
     $api->resource('enrollees','App\Http\Controllers\Api\EnrolleeController');
     $api->resource('organizations','App\Http\Controllers\Api\OrganizationController');
@@ -73,6 +78,9 @@ $api->version(['v1', 'middleware' => 'api|cors'], function($api){
     $api->resource('pharmacies','App\Http\Controllers\Api\PharmacyController');
     $api->resource('ailments','App\Http\Controllers\Api\AilmentController');
     $api->resource('medical-records','App\Http\Controllers\Api\MedicalRecordController');
+    $api->resource('nhis','App\Http\Controllers\Api\NhisController');
+    $api->resource('nhisTracker','App\Http\Controllers\Api\NhisTrackerController');
+    $api->resource('bands','App\Http\Controllers\Api\BandController');
 
     $api->resource('organizations.enrollees','App\Http\Controllers\Api\OrganizationEnrolleeController');
     $api->resource('organizations.plans','App\Http\Controllers\Api\OrganizationPlanController');

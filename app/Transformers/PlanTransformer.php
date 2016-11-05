@@ -19,6 +19,7 @@ class PlanTransformer extends TransformerAbstract
             'name' => $plan->name,
             'premium' => $plan->premium,
             'cover' => $plan->cover_limit,
+            'ailment' => unserialize($plan->ailment),
             'enrollee_count' => count($plan->enrollee)
         ];
     }

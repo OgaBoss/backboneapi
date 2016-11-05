@@ -11,6 +11,6 @@ class EnrolleeTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Enrollee::class, 5)->create();
+        factory(App\Enrollee::class, 200)->create();
     }
 }

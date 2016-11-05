@@ -67,7 +67,9 @@ $factory->define(App\Enrollee::class, function(Faker\Generator $faker){
         'country' => 'Nigeria',
         'status' => 0,
         'dob' => $faker->date($format = 'Y-m-d', $max = 'now'),
-        'enrollee_type' => 'child'
+        'enrollee_type' => 'child',
+        'nhis' => 1,
+        'nhis_status' => null
     ];
 });
 

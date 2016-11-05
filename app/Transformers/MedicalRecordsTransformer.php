@@ -13,6 +13,15 @@ use League\Fractal\TransformerAbstract;
 
 class MedicalRecordsTransformer extends  TransformerAbstract
 {
+    /**
+     * List of resources possible to include
+     *
+     * @var array
+     */
+//    protected $defaultIncludes = [
+//        'procedures',
+//    ];
+
     public function transform(MedicalRecord $medicalRecord){
         return [
             'id'                    => $medicalRecord->id,

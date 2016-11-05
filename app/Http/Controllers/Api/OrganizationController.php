@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Hashids\Hashids;
+use App\OrganizationPlan;
 use App\Library\Utilities;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
@@ -119,6 +120,19 @@ class OrganizationController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $plan_ids = $this->request->plan_ids;
+        $organization_update = $this->request->all();
+        unset($organization_update['plan_ids']);
+        $data = $this->organization->update($organization_update, $id);
+
+        $this->attachPlanToOrganizationUpdate($id, $plan_ids);
+
+        if($data == 1){
+            return response()->json(['success' => 'Organization data successfully updated'], 200);
+        }else{
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
+
     }
 
     /**
@@ -174,5 +188,17 @@ class OrganizationController extends Controller
         $plan = explode(',', $plan);
         $organization  =  $this->organization->find($id);
         return $organization->plan()->attach($plan);
+    }
+
+    protected function attachPlanToOrganizationUpdate($id, $plan_ids){
+        $plans = explode(',', $plan_ids);
+        $organization  =  $this->organization->find($id);
+
+        foreach($plans as $plan){
+            $check = OrganizationPlan::where('plan_id',$plan)->where('organization_id', $id)->get();
+            if(count($check) == 0){
+                $organization->plan()->attach($plan);
+            }
+        }
     }
 }
