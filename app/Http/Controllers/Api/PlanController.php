@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Library\Utilities;
-use App\Repositories\PlanRepository;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
@@ -20,6 +19,7 @@ class PlanController extends Controller
     protected $plan;
     protected $planTransformer;
     protected $hmo;
+    protected $request;
 
     /**
      * @param Manager $manager
@@ -28,13 +28,14 @@ class PlanController extends Controller
      * @param Utilities $utilities
      * @param HmoRepository $hmoRepository
      */
-    public function __construct(Manager $manager, Plan $plan, PlanTransformer $planTransformer,Utilities $utilities, HmoRepository $hmoRepository){
+    public function __construct(Manager $manager, Plan $plan, PlanTransformer $planTransformer,Utilities $utilities, HmoRepository $hmoRepository, Request $request){
         $this->middleware('jwt.auth');
         $this->utility = $utilities;
         $this->fractal = $manager;
         $this->plan =  $plan;
         $this->planTransformer = $planTransformer;
         $this->hmo = $hmoRepository;
+        $this->request = $request;
     }
 
     /**
@@ -67,7 +68,20 @@ class PlanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $this->request->all();
+        $ailment = explode(',', $data['ailment']);
+        unset($data['ailment']);
+        $data['ailment'] = serialize($ailment);
+
+        $data = $this->plan->create($data);
+        if(count($data) > 0){
+            $item = new Item($data, $this->planTransformer);
+            $data = $this->fractal->createData($item);
+            return response()->json(['plan' => $data->toArray()], 200);
+
+        }else{
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
     }
 
     /**

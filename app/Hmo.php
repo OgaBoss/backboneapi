@@ -12,7 +12,11 @@ class Hmo extends Model
     }
 
     public function enrollee(){
-       return $this->hasMany('App\Enrollee');
+       return $this->hasMany('App\Enrollee')->where('nhis', 0);
+    }
+
+    public function enrolleeNhis(){
+        return $this->hasMany('App\Enrollee')->where('nhis', 1);
     }
 
     public function organization(){
@@ -29,6 +33,14 @@ class Hmo extends Model
 
     public function pharmacy(){
         return $this->belongsToMany('App\Pharmacy', 'hmo_pharmacy');
+    }
+
+    public function records(){
+        return $this->hasMany('App\MedicalRecord');
+    }
+
+    public function nhisTracker(){
+        return $this->hasMany('App\NhisTracker');
     }
 
 }

@@ -55,14 +55,36 @@ $api->version(['v1', 'middleware' => 'api|cors'], function($api){
         'uses' => 'App\Http\Controllers\Api\FileParseController@store'
     ]);
 
+    $api->get('enrollee/search/{email}',[
+        'as' => 'search',
+        'uses' => 'App\Http\Controllers\Api\EnrolleeController@search'
+    ]);
+
+    $api->get('ailment/search/{text}',[
+        'as' => 'search',
+        'uses' => 'App\Http\Controllers\Api\AilmentController@search'
+    ]);
+
+    $api->get('organizations/{id}/others',[
+        'as' => 'others',
+        'uses' => 'App\Http\Controllers\Api\OrganizationPlanController@others'
+    ]);
+
 
     $api->resource('enrollees','App\Http\Controllers\Api\EnrolleeController');
     $api->resource('organizations','App\Http\Controllers\Api\OrganizationController');
     $api->resource('plans','App\Http\Controllers\Api\PlanController');
     $api->resource('hospitals','App\Http\Controllers\Api\HospitalController');
     $api->resource('pharmacies','App\Http\Controllers\Api\PharmacyController');
+    $api->resource('ailments','App\Http\Controllers\Api\AilmentController');
+    $api->resource('medical-records','App\Http\Controllers\Api\MedicalRecordController');
+    $api->resource('nhis','App\Http\Controllers\Api\NhisController');
+    $api->resource('nhisTracker','App\Http\Controllers\Api\NhisTrackerController');
+    $api->resource('bands','App\Http\Controllers\Api\BandController');
 
     $api->resource('organizations.enrollees','App\Http\Controllers\Api\OrganizationEnrolleeController');
     $api->resource('organizations.plans','App\Http\Controllers\Api\OrganizationPlanController');
+    $api->resource('hmo.hospital','App\Http\Controllers\Api\HmoHospitalController');
+    $api->resource('enrollee.record','App\Http\Controllers\Api\EnrolleeRecordsController');
 });
 

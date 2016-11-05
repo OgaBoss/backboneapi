@@ -2,45 +2,44 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Plan;
+use App\Library\Utilities;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Controller;
 use League\Fractal\Resource\Collection;
-use App\Transformers\PlanTransformer;
-use App\Repositories\OrganizationRepository as Organization;
+use App\Transformers\NhisTrackerTransformer;
+use App\Repositories\NhisTrackerRepository as Nhis;
 
-class OrganizationPlanController extends Controller
+class NhisTrackerController extends Controller
 {
-
+    protected $request;
     protected $fractal;
-    protected $organization;
-    protected $planTransformer;
+    protected $nhisTracker;
+    protected $nhisTrackerTransfomer;
+    protected $utility;
 
-    public function __construct(Manager $manager, Organization $organization, PlanTransformer $planTransformer){
+    public function __construct(Request $request, Manager $manager, NhisTrackerTransformer $nhisTrackerTransformer, Nhis $nhisTrackerRepository, Utilities $utilities)
+    {
         $this->middleware('jwt.auth');
+        $this->request = $request;
         $this->fractal = $manager;
-        $this->organization = $organization;
-        $this->planTransformer = $planTransformer;
+        $this->nhisTracker = $nhisTrackerRepository;
+        $this->nhisTrackerTransfomer = $nhisTrackerTransformer;
+        $this->utility = $utilities;
     }
-
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($organization_id)
+    public function index()
     {
         //
-        $organization = $this->organization->find($organization_id);
-        $plans = $organization->plan;
-
-
-        $collection = new Collection($plans, $this->planTransformer);
+        $collection = new Collection($this->utility->getCurrentUserHmo()->nhisTracker, $this->nhisTrackerTransfomer);
         $data = $this->fractal->createData($collection);
-        return response()->json(['plans' => $data->toArray()], 200);
-
+        return response()->json(['trackers' => $data->toArray()], 200);
     }
 
     /**
@@ -48,27 +47,9 @@ class OrganizationPlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function others($organization_id)
+    public function create()
     {
         //
-//        $organization = $this->organization->find($organization_id);
-//        $plans = $organization->plan->toArray();
-//        $newPlans = [] ;
-//
-//        $others = Plan::all();
-//
-//        foreach($others->toArray() as $other ){
-//            foreach($plans as $plan){
-//                if($other['name'] == $plan['name']){
-//                    unset($other);
-//                };
-//            }
-//        }
-//
-//        $collection = new Collection(collect($others), $this->planTransformer);
-//        $data = $this->fractal->createData($collection);
-//        return response()->json(['plans' => $data->toArray()], 200);
-
     }
 
     /**

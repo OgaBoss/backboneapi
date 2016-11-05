@@ -121,6 +121,13 @@ class EnrolleeController extends Controller
         }
     }
 
+    public function search($email){
+        $item = new Item($this->enrollee->findBy('email', $email), $this->enrolleeTransformer);
+        $data = $this->fractal->createData($item);
+        return response()->json(['enrollee' => $data->toArray()], 200);
+
+    }
+
     public function getChildren($id){
         $enrollee = $this->enrollee->find($id);
         $children = $enrollee->getChild;
@@ -171,7 +178,9 @@ class EnrolleeController extends Controller
             'dob'               => count($inComing->dob) > 0 ? $inComing->dob : null,
             'status'            => count($inComing->status) > 0 ? $inComing->status : null,
             'enrollee_type'     => count($inComing->enrollee_type) > 0 ? $inComing->enrollee_type : null,
-            'image_url'         => count($inComing->image_url) > 0 ? $inComing->image_url : null,
+            'image_url'         => count($inComing->image_url) > 0 ? $inComing->image_url : '',
+            'hospital_id'       => $inComing->hospital_id,
+            'dependent_id'      => count($inComing->dependent_id) > 0 ? $inComing->dependent_id : null
         ];
     }
 

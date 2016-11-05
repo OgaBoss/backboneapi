@@ -2,27 +2,30 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Plan;
+use App\MedicalRecord;
+use App\Library\Utilities;
 use League\Fractal\Manager;
-use Illuminate\Http\Request;
-use League\Fractal\Resource\Item;
-use App\Http\Controllers\Controller;
 use League\Fractal\Resource\Collection;
-use App\Transformers\PlanTransformer;
-use App\Repositories\OrganizationRepository as Organization;
+use Illuminate\Http\Request;
+use App\Repositories\EnrolleeRepository as Enrollee;
+use App\Transformers\MedicalRecordsTransformer;
+use App\Repositories\MedicalRecordRepository;
+use App\Http\Controllers\Controller;
+use League\Fractal\Resource\Item;
 
-class OrganizationPlanController extends Controller
+class EnrolleeRecordsController extends Controller
 {
-
+    protected $enrollee;
     protected $fractal;
-    protected $organization;
-    protected $planTransformer;
+    protected $request;
+    protected $medicalTransformer;
 
-    public function __construct(Manager $manager, Organization $organization, PlanTransformer $planTransformer){
-        $this->middleware('jwt.auth');
+    public function __construct(Request $request,Enrollee $enrolleeRepository, MedicalRecordsTransformer $medicalRecordsTransformer, Manager$manager){
+        $this->middleware('jwt.auth', ['except' => 'storeEnrolleeImage']);
+        $this->request = $request;
+        $this->medicalTransformer = $medicalRecordsTransformer;
         $this->fractal = $manager;
-        $this->organization = $organization;
-        $this->planTransformer = $planTransformer;
+        $this->enrollee = $enrolleeRepository;
     }
 
     /**
@@ -30,16 +33,12 @@ class OrganizationPlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($organization_id)
+    public function index($id)
     {
         //
-        $organization = $this->organization->find($organization_id);
-        $plans = $organization->plan;
-
-
-        $collection = new Collection($plans, $this->planTransformer);
+        $collection = new Collection($this->enrollee->find($id)->records, $this->medicalTransformer);
         $data = $this->fractal->createData($collection);
-        return response()->json(['plans' => $data->toArray()], 200);
+        return response()->json(['records' => $data->toArray()], 200);
 
     }
 
@@ -48,27 +47,9 @@ class OrganizationPlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function others($organization_id)
+    public function create()
     {
         //
-//        $organization = $this->organization->find($organization_id);
-//        $plans = $organization->plan->toArray();
-//        $newPlans = [] ;
-//
-//        $others = Plan::all();
-//
-//        foreach($others->toArray() as $other ){
-//            foreach($plans as $plan){
-//                if($other['name'] == $plan['name']){
-//                    unset($other);
-//                };
-//            }
-//        }
-//
-//        $collection = new Collection(collect($others), $this->planTransformer);
-//        $data = $this->fractal->createData($collection);
-//        return response()->json(['plans' => $data->toArray()], 200);
-
     }
 
     /**

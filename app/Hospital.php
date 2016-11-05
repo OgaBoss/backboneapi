@@ -16,4 +16,8 @@ class Hospital extends Model
     public function hmo(){
         return $this->belongsToMany('App\Hmo', 'hmo_hospital');
     }
+
+    public function records(){
+        return $this->belongsTo('App\Record');
+    }
 }

@@ -2,27 +2,28 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Plan;
+use App\Disease;
+use App\Library\Utilities;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Controller;
+use App\Transformers\AilmentTransformers;
 use League\Fractal\Resource\Collection;
-use App\Transformers\PlanTransformer;
-use App\Repositories\OrganizationRepository as Organization;
+use App\Repositories\AilmentRepository as Ailment;
 
-class OrganizationPlanController extends Controller
+
+
+class AilmentController extends Controller
 {
-
     protected $fractal;
-    protected $organization;
-    protected $planTransformer;
+    protected $ailment;
+    protected $ailmentTransformer;
 
-    public function __construct(Manager $manager, Organization $organization, PlanTransformer $planTransformer){
-        $this->middleware('jwt.auth');
+    public function __construct(Manager $manager, Ailment $ailmentRepository, AilmentTransformers $ailmentTransformers){
         $this->fractal = $manager;
-        $this->organization = $organization;
-        $this->planTransformer = $planTransformer;
+        $this->ailment = $ailmentRepository;
+        $this->ailmentTransformer = $ailmentTransformers;
     }
 
     /**
@@ -30,17 +31,12 @@ class OrganizationPlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($organization_id)
+    public function index()
     {
         //
-        $organization = $this->organization->find($organization_id);
-        $plans = $organization->plan;
-
-
-        $collection = new Collection($plans, $this->planTransformer);
+        $collection = new Collection($this->ailment->all()->take(500), $this->ailmentTransformer);
         $data = $this->fractal->createData($collection);
-        return response()->json(['plans' => $data->toArray()], 200);
-
+        return response()->json(['ailments' => $data->toArray()], 200);
     }
 
     /**
@@ -48,27 +44,9 @@ class OrganizationPlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function others($organization_id)
+    public function create()
     {
         //
-//        $organization = $this->organization->find($organization_id);
-//        $plans = $organization->plan->toArray();
-//        $newPlans = [] ;
-//
-//        $others = Plan::all();
-//
-//        foreach($others->toArray() as $other ){
-//            foreach($plans as $plan){
-//                if($other['name'] == $plan['name']){
-//                    unset($other);
-//                };
-//            }
-//        }
-//
-//        $collection = new Collection(collect($others), $this->planTransformer);
-//        $data = $this->fractal->createData($collection);
-//        return response()->json(['plans' => $data->toArray()], 200);
-
     }
 
     /**
@@ -125,5 +103,12 @@ class OrganizationPlanController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function search($text){
+        $data =  Disease::where('short_desc', 'LIKE', '%'.$text.'%')->get();
+        $collection = new Collection($data, $this->ailmentTransformer);
+        $data = $this->fractal->createData($collection);
+        return response()->json(['ailments' => $data->toArray()], 200);
     }
 }

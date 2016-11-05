@@ -2,27 +2,28 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Plan;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Controller;
 use League\Fractal\Resource\Collection;
-use App\Transformers\PlanTransformer;
-use App\Repositories\OrganizationRepository as Organization;
+use App\Transformers\HospitalTransformer;
+use App\Repositories\HmoRepository as Hmo;
 
-class OrganizationPlanController extends Controller
+class HmoHospitalController extends Controller
 {
-
     protected $fractal;
-    protected $organization;
-    protected $planTransformer;
+    protected $hmo;
+    protected $hospitalTransformer;
 
-    public function __construct(Manager $manager, Organization $organization, PlanTransformer $planTransformer){
+
+    public function __construct(Manager $manager, Hmo $hmo, HospitalTransformer $hospitalTransformer)
+    {
         $this->middleware('jwt.auth');
         $this->fractal = $manager;
-        $this->organization = $organization;
-        $this->planTransformer = $planTransformer;
+        $this->hmo = $hmo;
+        $this->hospitalTransformer = $hospitalTransformer;
+
     }
 
     /**
@@ -30,16 +31,8 @@ class OrganizationPlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($organization_id)
+    public function index($hmo_id)
     {
-        //
-        $organization = $this->organization->find($organization_id);
-        $plans = $organization->plan;
-
-
-        $collection = new Collection($plans, $this->planTransformer);
-        $data = $this->fractal->createData($collection);
-        return response()->json(['plans' => $data->toArray()], 200);
 
     }
 
@@ -48,27 +41,9 @@ class OrganizationPlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function others($organization_id)
+    public function create()
     {
         //
-//        $organization = $this->organization->find($organization_id);
-//        $plans = $organization->plan->toArray();
-//        $newPlans = [] ;
-//
-//        $others = Plan::all();
-//
-//        foreach($others->toArray() as $other ){
-//            foreach($plans as $plan){
-//                if($other['name'] == $plan['name']){
-//                    unset($other);
-//                };
-//            }
-//        }
-//
-//        $collection = new Collection(collect($others), $this->planTransformer);
-//        $data = $this->fractal->createData($collection);
-//        return response()->json(['plans' => $data->toArray()], 200);
-
     }
 
     /**
