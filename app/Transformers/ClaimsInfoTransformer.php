@@ -25,7 +25,8 @@ class ClaimsInfoTransformer extends  TransformerAbstract
             'hospital_name'             => $claims->code->hospital->name,
             'band_id'                   => $claims->code->hospital->band_id,
             'band_name'                 => $claims->code->hospital->band->name,
-            'prices'                    => $claims->code->hospital->prices->where('procedure_id',$claims->procedure->id)->toArray()
+            'prices'                    => $claims->code->hospital->prices->where('procedure_id',$claims->procedure->id)->toArray(),
+            'enrollee_id'               => $claims->code->enrollee_id
         ];
     }
 }

@@ -14,7 +14,8 @@ use League\Fractal\TransformerAbstract;
 class ReferralCodeTransformer extends  TransformerAbstract
 {
     protected $defaultIncludes = [
-        'claims'
+        'claims',
+        'health'
     ];
     public function transform(ReferralCode $referralCode){
         return [
@@ -24,11 +25,17 @@ class ReferralCodeTransformer extends  TransformerAbstract
             'hospital_id'           => $referralCode->hospital_id,
             'enrollee_id'           => $referralCode->enrollee_id,
             'enrollee_name'         => $referralCode->enrollee->first_name . ", " .$referralCode->enrollee->last_name,
-            'hospital_name'         => $referralCode->hospital->name
+            'hospital_name'         => $referralCode->hospital->name,
+            'date'                  => $referralCode->created_at->format('Y-m-d'),
+            'organization'          => $referralCode->enrollee->organization->name
         ];
     }
 
     public function includeClaims(ReferralCode $code){
         return $this->collection($code->claimsInfo, new ClaimsInfoTransformer());
+    }
+
+    public function includeHealth(ReferralCode $code){
+        return $this->collection($code->healthInfo, new HealthInfoTransformer());
     }
 }

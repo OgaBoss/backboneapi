@@ -47,6 +47,10 @@ class ReferralCodeController extends Controller
     public function index()
     {
         //
+        $collection = new Collection($this->code->all(), $this->codeTransformer);
+        $data = $this->fractal->createData($collection);
+        return response()->json(['codes' => $data->toArray()], 200);
+
     }
 
     /**

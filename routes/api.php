@@ -94,5 +94,6 @@ $api->version(['v1', 'middleware' => 'api|cors'], function($api){
 //    $api->resource('enrollee.record','App\Http\Controllers\Api\EnrolleeRecordsController');
     $api->resource('enrollee.claims','App\Http\Controllers\Api\EnrolleeClaimsInfoController');
     $api->resource('enrollee.healths','App\Http\Controllers\Api\EnrolleeHealthInfoController');
+    $api->resource('hospital.claims','App\Http\Controllers\Api\HospitalClaimsController');
 });
 
