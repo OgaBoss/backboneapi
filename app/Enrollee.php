@@ -56,7 +56,11 @@ class Enrollee extends Model
         return $this->belongsTo('App\Hospital');
     }
 
-    public function records(){
-        return $this->hasMany('App\MedicalRecord');
+    public function claimsInfo(){
+        return $this->hasManyThrough('App\ClaimsInfoRecord', 'App\ReferralCode', 'enrollee_id', 'code_id');
+    }
+
+    public function healthInfo(){
+        return $this->hasManyThrough('App\HealthInfoRecord','App\ReferralCode', 'enrollee_id', 'code_id');
     }
 }

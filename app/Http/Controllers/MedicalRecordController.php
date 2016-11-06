@@ -72,27 +72,7 @@ class MedicalRecordController extends Controller
     public function store(Request $request)
     {
         //
-        $data = $this->request->all();
-        $hashIds = new Hashids($this->request->disease."/".$this->request->code);
-        $rand_number = [];
-        for($i=0;$i < 6; $i++){
-            array_push($rand_number, rand(1, 1000000));
-        }
 
-        unset($data['code']);
-
-        $data['referral_code'] = $hashIds->encode($rand_number);
-
-
-        // Get Month
-        $dt = Carbon::now();
-        $data['start_date'] = $dt;
-        $data['month'] = date('F', mktime(0, 0, 0, $dt->month, 10));
-
-        $data = MedicalRecord::create($data);
-        $item = new Item($data, $this->medicalTransformer);
-        $data = $this->fractal->createData($item);
-        return response()->json(['record' => $data->toArray()], 200);
     }
 
     /**

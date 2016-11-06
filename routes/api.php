@@ -70,6 +70,11 @@ $api->version(['v1', 'middleware' => 'api|cors'], function($api){
         'uses' => 'App\Http\Controllers\Api\OrganizationPlanController@others'
     ]);
 
+    $api->get('codes/{code}/search',[
+        'as' => 'code.search',
+        'uses' => 'App\Http\Controllers\Api\ReferralCodeController@search'
+    ]);
+
 
     $api->resource('enrollees','App\Http\Controllers\Api\EnrolleeController');
     $api->resource('organizations','App\Http\Controllers\Api\OrganizationController');
@@ -77,14 +82,17 @@ $api->version(['v1', 'middleware' => 'api|cors'], function($api){
     $api->resource('hospitals','App\Http\Controllers\Api\HospitalController');
     $api->resource('pharmacies','App\Http\Controllers\Api\PharmacyController');
     $api->resource('ailments','App\Http\Controllers\Api\AilmentController');
-    $api->resource('medical-records','App\Http\Controllers\Api\MedicalRecordController');
+//    $api->resource('medical-records','App\Http\Controllers\Api\MedicalRecordController');
     $api->resource('nhis','App\Http\Controllers\Api\NhisController');
     $api->resource('nhisTracker','App\Http\Controllers\Api\NhisTrackerController');
     $api->resource('bands','App\Http\Controllers\Api\BandController');
+    $api->resource('codes','App\Http\Controllers\Api\ReferralCodeController');
 
     $api->resource('organizations.enrollees','App\Http\Controllers\Api\OrganizationEnrolleeController');
     $api->resource('organizations.plans','App\Http\Controllers\Api\OrganizationPlanController');
     $api->resource('hmo.hospital','App\Http\Controllers\Api\HmoHospitalController');
-    $api->resource('enrollee.record','App\Http\Controllers\Api\EnrolleeRecordsController');
+//    $api->resource('enrollee.record','App\Http\Controllers\Api\EnrolleeRecordsController');
+    $api->resource('enrollee.claims','App\Http\Controllers\Api\EnrolleeClaimsInfoController');
+    $api->resource('enrollee.healths','App\Http\Controllers\Api\EnrolleeHealthInfoController');
 });
 

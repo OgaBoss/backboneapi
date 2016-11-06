@@ -4,17 +4,19 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MedicalRecord extends Model
+class HealthInfoRecord extends Model
 {
     //
     protected $guarded = ['id'];
-
-    public function procedure(){
-        return $this->belongsToMany('App\Procedure', 'record_procedures','record_id','procedure_id');
-    }
+    protected $table = 'health_records';
 
     public function hospital(){
         return $this->belongsTo('App\Hospital');
+    }
+
+    public function code()
+    {
+        return $this->belongsTo('App\ReferralCode');
     }
 
 }

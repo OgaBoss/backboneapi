@@ -20,4 +20,20 @@ class Hospital extends Model
     public function records(){
         return $this->belongsTo('App\Record');
     }
+
+    public function prices(){
+        return $this->hasMany('App\ProcedureBand', 'band_id', 'band_id');
+    }
+
+    public function band(){
+        return $this->belongsTo('App\Band');
+    }
+
+    public function claimsInfo(){
+        return $this->hasManyThrough('App\ClaimsInfoRecord', 'App\ReferralCode', 'hospital_id', 'code_id');
+    }
+
+    public function healthInfo(){
+        return $this->hasManyThrough('App\HealthInfoRecord','App\ReferralCode', 'hospital_id', 'code_id');
+    }
 }
