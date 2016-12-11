@@ -15,7 +15,9 @@
         "maatwebsite/excel": "~2.1.0",
         "jrm2k6/cloudder": "*",
         "webcraft/laravel-random": "^1.0",
-        "bosnadev/repositories": "0.*"
+        "bosnadev/repositories": "0.*",
+        "guzzlehttp/guzzle": "^6.2",
+        "mpociot/laravel-apidoc-generator": "^1.7"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

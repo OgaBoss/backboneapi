@@ -14,6 +14,11 @@ use League\Fractal\Resource\Collection;
 use App\Transformers\EnrolleeTransformer;
 use App\Repositories\EnrolleeRepository as Enrollee;
 
+/**
+ * @resource Enrollee
+ * Class EnrolleeController
+ * @package App\Http\Controllers\Api
+ */
 class EnrolleeController extends Controller
 {
     protected $fractal;

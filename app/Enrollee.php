@@ -2,6 +2,7 @@
 
 namespace App;
 
+use \Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -20,6 +21,7 @@ class Enrollee extends Model
     /**
      * @param $value
      */
+
     public function setDependentIdAttribute($value){
         $this->attributes['dependent_id'] = $value ?: null;
     }
@@ -57,10 +59,10 @@ class Enrollee extends Model
     }
 
     public function claimsInfo(){
-        return $this->hasManyThrough('App\ClaimsInfoRecord', 'App\ReferralCode', 'enrollee_id', 'code_id');
+        return $this->hasManyThrough('App\ClaimsInfoRecord', 'App\ReferralCode', 'enrollee_id', 'code_id')->where('month', Request::input('month') ?  Request::input('month') : date('M') );
     }
 
     public function healthInfo(){
-        return $this->hasManyThrough('App\HealthInfoRecord','App\ReferralCode', 'enrollee_id', 'code_id');
+        return $this->hasManyThrough('App\HealthInfoRecord','App\ReferralCode', 'enrollee_id', 'code_id')->where('month', Request::input('month') ?  Request::input('month') : date('M') );
     }
 }

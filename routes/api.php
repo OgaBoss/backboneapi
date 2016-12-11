@@ -70,10 +70,17 @@ $api->version(['v1', 'middleware' => 'api|cors'], function($api){
         'uses' => 'App\Http\Controllers\Api\OrganizationPlanController@others'
     ]);
 
+    $api->post('mailParams',[
+        'as' => 'mail.params',
+        'uses' => 'App\Http\Controllers\EmailController@mailParams'
+    ]);
+
     $api->get('codes/{code}/search',[
         'as' => 'code.search',
         'uses' => 'App\Http\Controllers\Api\ReferralCodeController@search'
     ]);
+
+
 
 
     $api->resource('enrollees','App\Http\Controllers\Api\EnrolleeController');
