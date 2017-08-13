@@ -103,17 +103,11 @@ class HospitalController extends Controller
      */
     public function destroy($id)
     {
-        $hospital = $this->hospital->find($id);
-        if($hospital != null){
-            $hospital->delete();
-            if($this->hospital->find($id) == null){
-                return response()->json(['msg' => 'Enrollee Deleted'], 200);
-            }else{
+        //Get Current HMO
+        $hmo = $this->utility->getCurrentUserHmo();
+        $hmo->hospital()->detach($id);
+        return response()->json(['msg' => 'Hospital Deleted'], 200);
 
-            }
-        }else{
-            return response()->json(['error' => 'This hospital does not exist'], 200);
-        }
     }
 
     protected function attachHmoToHospital($hospital)

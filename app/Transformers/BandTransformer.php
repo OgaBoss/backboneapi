@@ -11,7 +11,7 @@ namespace App\Transformers;
 use App\Band;
 use League\Fractal\TransformerAbstract;
 
-class BandTransformer extends TransformerAbstract
+class BandTransformer extends TransformerAbstractP
 {
     public function transform(Band $band){
         return [

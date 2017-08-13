@@ -80,6 +80,13 @@ $api->version(['v1', 'middleware' => 'api|cors'], function($api){
         'uses' => 'App\Http\Controllers\Api\ReferralCodeController@search'
     ]);
 
+    $api->get('hospital/{id}/enrolleeCount',[
+        'as' => 'enrolleeCount',
+        'uses' => 'App\Http\Controllers\Api\HospitalEnrolleeController@enrolleeHmoHospitalCount'
+    ]);
+
+
+
 
 
 

@@ -133,7 +133,6 @@ class ReferralCodeController extends Controller
 
     public function search($code){
         $data = $this->code->findBy('referral_code', $code);
-//        dd($data->with('claimsInfo')->get());
         $collection = new Item($data, $this->codeTransformer);
         $data = $this->fractal->createData($collection);
         return response()->json(['claims' => $data->toArray()], 200);

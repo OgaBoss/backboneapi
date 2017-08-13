@@ -17,4 +17,8 @@ class Plan extends Model
     public function enrollee(){
         return $this->hasMany('App\Enrollee');
     }
+
+    public function variation(){
+        return $this->belongsTo('App\Plan', 'plan_id');
+    }
 }

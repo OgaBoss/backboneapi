@@ -25,7 +25,9 @@ class HospitalTransformer extends TransformerAbstract
             'city' => $hospital->city,
             'state' => $hospital->state,
             'country' => $hospital->country,
-            'enrollee_count' => count($hospital->enrollees)
+            'enrollee_count' => count($hospital->enrollees),
+            'bank' => $hospital->bank,
+            'account' => $hospital->account_number
         ];
     }
 }
